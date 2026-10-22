@@ -25,7 +25,7 @@ function rand(seed) {
 }
 
 /* Dark typographic poster used by the curved carousel. */
-export function posterTexture(p, i) {
+export function posterTexture(p, i, tex = {}) {
   const [c, g] = makeCanvas();
   const r = rand(i * 999 + 7);
 
@@ -103,13 +103,13 @@ export function posterTexture(p, i) {
   g.fillStyle = '#000';
   g.font = `700 16px ${MONO}`;
   g.textAlign = 'center';
-  g.fillText(p.url ? 'VOIR LE REPO →' : 'SUR DEMANDE', W - 40 - bw / 2, H - 53);
+  g.fillText(p.url ? (tex.viewRepo || 'VIEW REPO →') : (tex.onRequest || 'ON REQUEST'), W - 40 - bw / 2, H - 53);
 
   return toTexture(c);
 }
 
 /* Light "case file" sheet used by the dossiers ring. */
-export function dossierTexture(d, i) {
+export function dossierTexture(d, i, tex = {}, locale = 'fr') {
   const [c, g] = makeCanvas();
   g.fillStyle = '#fafafa';
   g.fillRect(0, 0, W, H);
@@ -130,7 +130,7 @@ export function dossierTexture(d, i) {
   g.font = `400 14px ${MONO}`;
   g.textAlign = 'center';
   g.textBaseline = 'middle';
-  g.fillText(`dossier-0${i + 1}.pdf`, W / 2, 28);
+  g.fillText(tex.dossierPdf ? tex.dossierPdf(i) : `dossier-0${i + 1}.pdf`, W / 2, 28);
 
   g.textAlign = 'left';
   g.fillStyle = '#111';
@@ -142,7 +142,7 @@ export function dossierTexture(d, i) {
 
   g.save();
   g.translate(48, 200);
-  drawers[d.kind](g, W - 96, H - 250);
+  drawers[d.kind](g, W - 96, H - 250, locale);
   g.restore();
 
   return toTexture(c);
@@ -152,14 +152,22 @@ const ink = '#111';
 const grey = '#cfcfcf';
 
 const drawers = {
-  orders(g, w) {
-    const rows = [
-      ['#1042', 'Restaurant Bombay', 'LIVRÉE', '#111'],
-      ['#1043', 'Café Marco', 'EN PRÉPA', '#777'],
-      ['#1044', 'Brasserie du Parc', 'VALIDÉE', '#aaa'],
-      ['#1045', 'Le Petit Sablon', 'EN ROUTE', '#444'],
-      ['#1046', 'Chez Fatima', 'RETOUR', '#999'],
-    ];
+  orders(g, w, locale = 'fr') {
+    const rows = locale === 'en'
+      ? [
+          ['#1042', 'Restaurant Bombay', 'DELIVERED', '#111'],
+          ['#1043', 'Café Marco', 'IN PREP', '#777'],
+          ['#1044', 'Brasserie du Parc', 'CONFIRMED', '#aaa'],
+          ['#1045', 'Le Petit Sablon', 'EN ROUTE', '#444'],
+          ['#1046', 'Chez Fatima', 'RETURN', '#999'],
+        ]
+      : [
+          ['#1042', 'Restaurant Bombay', 'LIVRÉE', '#111'],
+          ['#1043', 'Café Marco', 'EN PRÉPA', '#777'],
+          ['#1044', 'Brasserie du Parc', 'VALIDÉE', '#aaa'],
+          ['#1045', 'Le Petit Sablon', 'EN ROUTE', '#444'],
+          ['#1046', 'Chez Fatima', 'RETOUR', '#999'],
+        ];
     g.font = `600 22px ${DISPLAY}`;
     rows.forEach((r, k) => {
       const y = k * 62;
@@ -185,7 +193,7 @@ const drawers = {
       g.fillText(`stock ✓ ${12 - k * 2}`, w - 150, y + 28);
     });
   },
-  hand(g, w, h) {
+  hand(g, w, h, locale = 'fr') {
     const pts = [[0, 0], [-60, -40], [-95, -90], [-115, -140], [-130, -180], [-35, -120], [-40, -190], [-42, -235], [-44, -270], [0, -125], [2, -200], [4, -250], [6, -290], [35, -118], [45, -185], [52, -230], [58, -265], [65, -100], [85, -150], [98, -185], [108, -215]];
     const bones = [[0, 1], [1, 2], [2, 3], [3, 4], [0, 5], [5, 6], [6, 7], [7, 8], [5, 9], [9, 10], [10, 11], [11, 12], [9, 13], [13, 14], [14, 15], [15, 16], [13, 17], [0, 17], [17, 18], [18, 19], [19, 20]];
     g.save();
@@ -196,7 +204,9 @@ const drawers = {
     g.fillStyle = '#fff';
     pts.forEach((p) => { g.beginPath(); g.arc(p[0], p[1], 7, 0, Math.PI * 2); g.fill(); g.stroke(); });
     g.restore();
-    const bars = [['HOLD-OUT', 0.982], ['5 NOUVEAUX SIGNATAIRES', 0.84]];
+    const bars = locale === 'en'
+      ? [['HOLD-OUT', 0.982], ['5 UNSEEN SIGNERS', 0.84]]
+      : [['HOLD-OUT', 0.982], ['5 NOUVEAUX SIGNATAIRES', 0.84]];
     bars.forEach(([label, v], k) => {
       const x = 380, y = 40 + k * 120, bw = w - 400;
       g.fillStyle = '#888';
@@ -208,10 +218,11 @@ const drawers = {
       g.fillRect(x, y + 18, bw * v, 40);
       g.fillStyle = '#fff';
       g.font = `800 22px ${DISPLAY}`;
-      g.fillText(`${(v * 100).toFixed(1).replace('.', ',')} %`, x + 14, y + 39);
+      const pct = (v * 100).toFixed(1);
+      g.fillText(`${locale === 'en' ? pct : pct.replace('.', ',')} %`, x + 14, y + 39);
     });
   },
-  roc(g, w, h) {
+  roc(g, w, h, locale = 'fr') {
     const s = h - 20, x0 = 30, y0 = h - 10;
     g.strokeStyle = grey;
     g.lineWidth = 2;
@@ -232,17 +243,19 @@ const drawers = {
     curve(2.4, '#999', 3);
     curve(4.2, ink, 4);
     g.font = `400 16px ${MONO}`;
-    [['LLM (Mistral)', ink], ['Baseline tabulaire', '#999']].forEach(([l, col], k) => {
+    (locale === 'en'
+      ? [['LLM (Mistral)', ink], ['Tabular baseline', '#999']]
+      : [['LLM (Mistral)', ink], ['Baseline tabulaire', '#999']]).forEach(([l, col], k) => {
       g.fillStyle = col;
       g.fillRect(s + 90, 50 + k * 50, 30, 6);
       g.fillStyle = '#333';
       g.fillText(l, s + 134, 54 + k * 50);
     });
     g.fillStyle = '#888';
-    g.fillText('+ coût énergie / carbone suivi', s + 90, 190);
-    g.fillText('jeu de test étiqueté à la main', s + 90, 222);
+    g.fillText(locale === 'en' ? '+ energy / carbon tracked' : '+ coût énergie / carbone suivi', s + 90, 190);
+    g.fillText(locale === 'en' ? 'hand-labelled test set' : 'jeu de test étiqueté à la main', s + 90, 222);
   },
-  cluster(g, w, h) {
+  cluster(g, w, h, locale = 'fr') {
     const lb = [w / 2, 40];
     const nodes = [[w / 2 - 260, h - 70], [w / 2, h - 70], [w / 2 + 260, h - 70]];
     g.strokeStyle = ink;
@@ -261,13 +274,15 @@ const drawers = {
       g.textAlign = 'left';
     };
     box(lb[0], lb[1], 'LOAD BALANCER', true);
-    nodes.forEach((n, k) => box(n[0], n[1], `NŒUD 0${k + 1} ${k === 1 ? '⟳' : '✓'}`, false));
+    nodes.forEach((n, k) => box(n[0], n[1], `${locale === 'en' ? 'NODE' : 'NŒUD'} 0${k + 1} ${k === 1 ? '⟳' : '✓'}`, false));
     g.fillStyle = '#888';
     g.font = `400 15px ${MONO}`;
-    g.fillText('réplication · failover · plan de reprise', w / 2 - 170, h - 6);
+    g.fillText(locale === 'en' ? 'replication · failover · recovery plan' : 'réplication · failover · plan de reprise', w / 2 - 170, h - 6);
   },
-  gantt(g, w) {
-    const tasks = [['Cadrage', 0, 0.18], ['Planning', 0.12, 0.3], ['Conception', 0.25, 0.55], ['Réalisation', 0.45, 0.85], ['Revue', 0.8, 0.92], ['Livraison', 0.9, 1]];
+  gantt(g, w, locale = 'fr') {
+    const tasks = locale === 'en'
+      ? [['Scoping', 0, 0.18], ['Planning', 0.12, 0.3], ['Design', 0.25, 0.55], ['Build', 0.45, 0.85], ['Review', 0.8, 0.92], ['Delivery', 0.9, 1]]
+      : [['Cadrage', 0, 0.18], ['Planning', 0.12, 0.3], ['Conception', 0.25, 0.55], ['Réalisation', 0.45, 0.85], ['Revue', 0.8, 0.92], ['Livraison', 0.9, 1]];
     const x0 = 180, ww = w - x0;
     g.strokeStyle = '#eee';
     for (let k = 0; k <= 6; k++) { g.beginPath(); g.moveTo(x0 + (ww * k) / 6, 0); g.lineTo(x0 + (ww * k) / 6, 340); g.stroke(); }
@@ -282,11 +297,15 @@ const drawers = {
     g.fillStyle = ink;
     g.beginPath(); g.moveTo(x0 + ww - 4, 0); g.lineTo(x0 + ww + 10, -14); g.lineTo(x0 + ww - 18, -14); g.fill();
   },
-  network(g, w, h) {
+  network(g, w, h, locale = 'fr') {
     const root = [w / 2, 36];
     const mids = [[w * 0.2, 170], [w * 0.5, 170], [w * 0.8, 170]];
-    const labels = ['CISCO SW', 'SALLE SERVEUR', 'KNX / ETS'];
-    const leaves = ['CAM 01', 'CAM 02', 'NAS', 'UPS', 'ÉCLAIRAGE', 'HVAC'];
+    const labels = locale === 'en'
+      ? ['CISCO SW', 'SERVER ROOM', 'KNX / ETS']
+      : ['CISCO SW', 'SALLE SERVEUR', 'KNX / ETS'];
+    const leaves = locale === 'en'
+      ? ['CAM 01', 'CAM 02', 'NAS', 'UPS', 'LIGHTING', 'HVAC']
+      : ['CAM 01', 'CAM 02', 'NAS', 'UPS', 'ÉCLAIRAGE', 'HVAC'];
     g.strokeStyle = ink;
     g.lineWidth = 2;
     mids.forEach((m, k) => {

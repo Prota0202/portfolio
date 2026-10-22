@@ -39,7 +39,7 @@ const fragment = /* glsl */ `
   }
 `;
 
-export function createCarousel(canvas, projects, onChange) {
+export function createCarousel(canvas, projects, textureUi, onChange) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   const scene = new THREE.Scene();
@@ -54,7 +54,7 @@ export function createCarousel(canvas, projects, onChange) {
       side: THREE.DoubleSide,
       transparent: true,
       uniforms: {
-        uMap: { value: posterTexture(p, i) },
+        uMap: { value: posterTexture(p, i, textureUi) },
         uBend: { value: 0.045 },
         uTwist: { value: 0.07 },
         uVelocity: { value: 0 },
@@ -157,5 +157,15 @@ export function createCarousel(canvas, projects, onChange) {
     renderer.render(scene, camera);
   }
 
-  return { setProgress, setVisible, render };
+  function setLocale(nextProjects, nextTex) {
+    cards.forEach((m, i) => {
+      m.material.uniforms.uMap.value.dispose();
+      m.material.uniforms.uMap.value = posterTexture(nextProjects[i], i, nextTex);
+      m.userData.project = nextProjects[i];
+    });
+    const idx = active >= 0 ? active : 0;
+    onChange(idx);
+  }
+
+  return { setProgress, setVisible, render, setLocale };
 }

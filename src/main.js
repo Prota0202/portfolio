@@ -1,7 +1,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
-import { experiences, projects, dossiers, services } from './content.js';
+import { getData, getLang, setLang, onLangChange, initLang } from './i18n.js';
 import { createCarousel } from './three/carousel.js';
 import { createRing } from './three/ring.js';
 import { initEasterEggs } from './eggs.js';
@@ -14,6 +14,13 @@ window.scrollTo(0, 0);
 const $ = (s) => document.querySelector(s);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const isMobile = window.matchMedia('(max-width: 900px)').matches;
+initLang();
+
+let carouselRef = null;
+let ringRef = null;
+let lastDossierIdx = -1;
+
+const NAV_KEYS = ['home', 'about', 'experience', 'projects', 'dossiers', 'services'];
 
 /* ---------------- smooth scroll ---------------- */
 const lenis = new Lenis({ lerp: 0.09 });
@@ -31,13 +38,84 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
   });
 });
 
-/* ---------------- render dynamic sections ---------------- */
-function buildExperience() {
+/* ---------------- i18n UI ---------------- */
+function applyStaticUI() {
+  const { meta, ui } = getData();
+  document.documentElement.lang = getData().htmlLang;
+  document.title = meta.title;
+  $('meta[name="description"]').setAttribute('content', meta.description);
+  $('#loaderSuffix').textContent = ui.loaderSuffix;
+  document.querySelectorAll('.nav__links a').forEach((a, i) => {
+    a.textContent = ui.nav[NAV_KEYS[i]];
+  });
+  $('#navStatus').textContent = ui.status;
+  $('#navCv').textContent = ui.cv;
+
+  const h = ui.hero;
+  const l1 = $('.hero__line:nth-child(1)');
+  const l2 = $('.hero__line:nth-child(2)');
+  l1.textContent = h.line1;
+  l1.dataset.text = h.line1;
+  l2.textContent = h.line2;
+  l2.dataset.text = h.line2;
+  $('.hero__left').innerHTML = `${h.left}<div class="hero__scroll"><span></span>${h.scroll}</div>`;
+  $('.hero__right p').textContent = h.pitch;
+  $('.hero__right ul').innerHTML = h.roles.map((r) => `<li>${r}</li>`).join('');
+  $('.hero__portrait img').alt = h.portraitAlt;
+  $('#portraitBubble').innerHTML = h.portraitBubble;
+
+  const ab = ui.about;
+  $('.about__headline').innerHTML = ab.headline;
+  $('.about__meta').innerHTML = ab.meta;
+  $('.about__label').innerHTML = ab.label;
+  document.querySelector('.scramble').textContent = ab.body;
+  $('.about__actions .btn--light').textContent = ab.downloadCv;
+  $('.about__actions .btn--ghost').textContent = ab.services;
+  $('.about__word--l').textContent = ab.wordL;
+  $('.about__word--r').textContent = ab.wordR;
+
+  $('#expLabel').textContent = ui.exp.defaultLabel;
+  $('.projects__kicker').textContent = ui.projects.kicker;
+  $('.projects__title').textContent = ui.projects.title;
+  $('#ringCenter').textContent = ui.dossiers.center;
+  $('#dossHint').textContent = ui.dossiers.hint;
+  $('.services__title').textContent = ui.services.title;
+  $('.services__intro').textContent = ui.services.intro;
+  $('.contact__title').textContent = ui.contact.title;
+  $('.contact__title').dataset.text = ui.contact.title;
+  $('.contact__sub').textContent = ui.contact.sub;
+  $('.contact__links a:nth-child(3)').textContent = ui.contact.email;
+  $('.contact__links a:nth-child(4)').textContent = ui.contact.phone;
+  $('.contact__links a:nth-child(5)').textContent = ui.contact.downloadCv;
+  $('.contact__foot span:first-child').textContent = ui.contact.foot;
+  $('.contact__egg').textContent = ui.contact.egg;
+
+  const bg = ui.bingo;
+  $('.bingo__kicker').textContent = bg.kicker;
+  $('.bingo__card h3').textContent = bg.title;
+  $('#bingoClose').textContent = bg.close;
+  const bingoFoot = $('.bingo__foot');
+  if (bingoFoot.firstChild?.nodeType === Node.TEXT_NODE) bingoFoot.firstChild.textContent = `${bg.foot} `;
+
+  document.querySelectorAll('.lang__btn').forEach((b) => {
+    b.classList.toggle('is-active', b.dataset.lang === getLang());
+  });
+}
+
+function rebuildExperience() {
+  const { experiences, ui } = getData();
   const track = $('#expTrack');
   const tabs = $('#expTabs');
-  experiences.forEach((x, i) => {
-    const panel = document.createElement('article');
-    panel.className = 'exp__panel';
+  track.querySelectorAll('.exp__panel:not(.exp__panel--intro)').forEach((p) => p.remove());
+  tabs.innerHTML = '';
+
+  const intro = track.querySelector('.exp__panel--intro');
+  intro.querySelector('.pill').textContent = ui.exp.introPill;
+  intro.querySelector('.exp__intro').innerHTML = ui.exp.introTitle;
+  intro.querySelector('p').textContent = ui.exp.introText;
+
+  const existing = [...track.querySelectorAll('.exp__panel:not(.exp__panel--intro)')];
+  const fillPanel = (panel, x) => {
     panel.innerHTML = `
       <div class="exp__ghost">${x.ghost} — ${x.ghost}</div>
       <div class="exp__body">
@@ -45,9 +123,23 @@ function buildExperience() {
         <h3 class="exp__title">${x.title.join('<br/>')}</h3>
         <p class="exp__desc">${x.desc}</p>
         <div class="exp__miles">
-          ${x.milestones.map(([k, v]) => `<div><div class="mono">${k}</div><p>${v}</p></div>`).join('')}
+          ${x.milestones.map(([k, v]) => `<div><div class="mono">${ui.exp.milestone} ${k}</div><p>${v}</p></div>`).join('')}
         </div>
       </div>`;
+  };
+
+  if (existing.length === experiences.length) {
+    experiences.forEach((x, i) => {
+      fillPanel(existing[i], x);
+      if (tabs.children[i]) tabs.children[i].textContent = x.tab;
+    });
+    return;
+  }
+
+  experiences.forEach((x, i) => {
+    const panel = document.createElement('article');
+    panel.className = 'exp__panel';
+    fillPanel(panel, x);
     track.appendChild(panel);
     const b = document.createElement('button');
     b.textContent = x.tab;
@@ -56,8 +148,10 @@ function buildExperience() {
   });
 }
 
-function buildServices() {
+function rebuildServices() {
+  const { services, ui } = getData();
   const list = $('#servicesList');
+  list.innerHTML = '';
   services.forEach((s, i) => {
     const el = document.createElement('div');
     el.className = 'svc' + (i === 0 ? ' is-open' : '');
@@ -66,7 +160,7 @@ function buildServices() {
       <div class="svc__head"><h3>${s.title}</h3><span>0${i + 1} / 0${services.length}</span></div>
       <div class="svc__body"><div>
         <p>${s.desc}</p>
-        <div class="svc__del mono"><span>Livrables</span><span>${s.deliverables}</span></div>
+        <div class="svc__del mono"><span>${ui.services.deliverables}</span><span>${s.deliverables}</span></div>
       </div></div>`;
     const open = () => {
       list.querySelectorAll('.svc').forEach((n) => n.classList.toggle('is-open', n === el));
@@ -77,8 +171,28 @@ function buildServices() {
   });
 }
 
-buildExperience();
-buildServices();
+function applyLanguage() {
+  applyStaticUI();
+  rebuildExperience();
+  rebuildServices();
+  if (carouselRef) carouselRef.setLocale(getData().projects, getData().ui.textures);
+  if (ringRef) ringRef.setLocale(getData().dossiers, getData().ui.textures, getLang());
+  if (lastDossierIdx >= 0) onDossierChange(lastDossierIdx);
+  scrambled = false;
+  ScrollTrigger.refresh();
+}
+
+function initLangSwitcher() {
+  document.querySelectorAll('.lang__btn').forEach((btn) => {
+    btn.addEventListener('click', () => setLang(btn.dataset.lang));
+  });
+  onLangChange(() => applyLanguage());
+}
+
+rebuildExperience();
+rebuildServices();
+applyStaticUI();
+initLangSwitcher();
 
 /* ---------------- preloader ---------------- */
 function wavyCirclePath() {
@@ -216,13 +330,13 @@ function experienceScroll() {
           void title.offsetWidth;
           title.classList.add('glitch');
           tabs.forEach((t, k) => t.classList.toggle('is-active', k === i - 1));
-          $('#expLabel').textContent = experiences[i - 1].tag;
+          $('#expLabel').textContent = getData().experiences[i - 1].tag;
         }
       });
       if (self.progress < 0.05 && current !== 0) {
         current = 0;
         tabs.forEach((t) => t.classList.remove('is-active'));
-        $('#expLabel').textContent = 'Origines & parcours';
+        $('#expLabel').textContent = getData().ui.exp.defaultLabel;
       }
     },
   });
@@ -283,20 +397,29 @@ function dossiersScroll(ring) {
 }
 
 function onDossierChange(i) {
+  lastDossierIdx = i;
   const els = ['#dossName', '#dossMeta', '#dossDetail'].map($);
   if (i < 0) {
     gsap.to(els, { opacity: 0, duration: 0.3 });
     return;
   }
-  const d = dossiers[i];
+  const d = getData().dossiers[i];
+  const L = getData().ui.dossiers;
   gsap.to(els, {
     opacity: 0, y: -8, duration: 0.18, onComplete: () => {
       els[0].textContent = d.name;
       els[1].innerHTML = d.meta.map((m) => `<div>${m}</div>`).join('');
-      els[2].innerHTML = `<dl><dt>Problème</dt><dd>${d.problem}</dd><dt>Approche</dt><dd>${d.approach}</dd><dt>Résultat</dt><dd>${d.result}</dd></dl>`;
+      els[2].innerHTML = `<dl><dt>${L.problem}</dt><dd>${d.problem}</dd><dt>${L.approach}</dt><dd>${d.approach}</dd><dt>${L.result}</dt><dd>${d.result}</dd></dl>`;
       gsap.fromTo(els, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.05 });
     },
   });
+}
+
+function onProjectChange(i) {
+  const p = getData().projects[i];
+  $('#projName').textContent = p.name;
+  $('#projSub').textContent = p.sub;
+  $('#projIdx').textContent = `0${i + 1} / 0${getData().projects.length}`;
 }
 
 function servicesScroll() {
@@ -347,24 +470,21 @@ async function boot() {
     document.fonts.load('700 16px "Space Mono"'),
   ]).catch(() => {});
 
-  const carousel = createCarousel($('#carouselCanvas'), projects, (i) => {
-    const p = projects[i];
-    $('#projName').textContent = p.name;
-    $('#projSub').textContent = p.sub;
-    $('#projIdx').textContent = `0${i + 1} / 0${projects.length}`;
-  });
-  const ring = createRing($('#ringCanvas'), dossiers, onDossierChange);
+  const bootData = getData();
+  carouselRef = createCarousel($('#carouselCanvas'), bootData.projects, bootData.ui.textures, onProjectChange);
+  ringRef = createRing($('#ringCanvas'), bootData.dossiers, bootData.ui.textures, getLang(), onDossierChange);
+  onProjectChange(0);
 
   gsap.ticker.add((_, dt) => {
-    carousel.render();
-    ring.render(dt / 1000);
+    carouselRef.render();
+    ringRef.render(dt / 1000);
   });
 
   heroScroll();
   aboutScroll();
   experienceScroll();
-  projectsScroll(carousel);
-  dossiersScroll(ring);
+  projectsScroll(carouselRef);
+  dossiersScroll(ringRef);
   servicesScroll();
   contactScroll();
   navSpy();

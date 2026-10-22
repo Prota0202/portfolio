@@ -10,7 +10,7 @@ const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
 
-export function createRing(canvas, dossiers, onChange) {
+export function createRing(canvas, dossiers, textureUi, locale, onChange) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   const scene = new THREE.Scene();
@@ -34,7 +34,7 @@ export function createRing(canvas, dossiers, onChange) {
     const group = new THREE.Group();
     const mesh = new THREE.Mesh(
       geo,
-      new THREE.MeshBasicMaterial({ map: dossierTexture(d, i), transparent: true, side: THREE.DoubleSide }),
+      new THREE.MeshBasicMaterial({ map: dossierTexture(d, i, textureUi, locale), transparent: true, side: THREE.DoubleSide }),
     );
     const shadow = new THREE.Mesh(
       new THREE.PlaneGeometry(CARD_W * 1.5, CARD_H * 1.6),
@@ -114,5 +114,22 @@ export function createRing(canvas, dossiers, onChange) {
     renderer.render(scene, camera);
   }
 
-  return { setProgress, setVisible, render };
+  let dossierList = dossiers;
+  let tex = textureUi;
+  let lang = locale;
+
+  function setLocale(nextDossiers, nextTex, nextLocale) {
+    dossierList = nextDossiers;
+    tex = nextTex;
+    lang = nextLocale;
+    cards.forEach((g, i) => {
+      const mat = g.children[1].material;
+      mat.map.dispose();
+      mat.map = dossierTexture(dossierList[i], i, tex, lang);
+      mat.needsUpdate = true;
+    });
+    if (active >= 0) onChange(active, 1);
+  }
+
+  return { setProgress, setVisible, render, setLocale };
 }

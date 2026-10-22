@@ -66,6 +66,12 @@ img { display: block; max-width: 100%; }
 .nav__status { display: flex; align-items: center; gap: 6px; opacity: .8; }
 .nav__status i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: blink 1.6s infinite; }
 .nav__cv { padding: 6px 14px; border: 1px solid currentColor; border-radius: 99px; }
+.lang { display: flex; gap: 2px; padding: 2px; border: 1px solid currentColor; border-radius: 99px; opacity: .85; }
+.lang__btn {
+  font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
+  background: transparent; border: 0; color: inherit; padding: 4px 8px; border-radius: 99px; cursor: pointer; transition: .25s;
+}
+.lang__btn.is-active { background: currentColor; color: #000; mix-blend-mode: difference; }
 @keyframes blink { 50% { opacity: .2; } }
 
 /* ---------- HERO ---------- */
@@ -301,6 +307,7 @@ img { display: block; max-width: 100%; }
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 900px) {
   .nav__links, .nav__status { display: none; }
+  .lang { margin-right: 4px; }
   .nav { padding: 16px 20px; }
   .hero__title { top: 16vh; font-size: 12.4vw; }
   .about__content { padding-top: 76px; }
