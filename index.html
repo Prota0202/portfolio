@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Abdelbadi Lababidi — Chef de projet · Consultant · Analyste</title>
+    <meta name="description" content="Ingénieur industriel (informatique, distinction). Je fais le pont entre le métier et la technique : cadrage, coordination, preuve de concept, documentation." />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230c0c0c'/><text x='32' y='42' font-family='Arial' font-weight='900' font-size='28' fill='white' text-anchor='middle'>AL</text></svg>" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/src/style.css" />
+  </head>
+  <body>
+    <!-- PRELOADER -->
+    <div class="loader" id="loader">
+      <div class="loader__inner">
+        <svg class="loader__ring" viewBox="0 0 400 400" aria-hidden="true">
+          <path id="loaderPath" d="" />
+          <circle id="loaderDot" r="4" />
+        </svg>
+        <div class="loader__word">ABDELBADI</div>
+      </div>
+      <div class="loader__count"><span id="loaderCount">000</span> — chargement du livrable</div>
+    </div>
+
+    <!-- NAV -->
+    <header class="nav" id="nav">
+      <a href="#top" class="nav__logo" id="logo">ABDELBADI<span class="dot"></span></a>
+      <nav class="nav__links">
+        <a href="#top" class="is-active">Accueil</a>
+        <a href="#about">À propos</a>
+        <a href="#experience">Parcours</a>
+        <a href="#projects">Projets</a>
+        <a href="#dossiers">Dossiers</a>
+        <a href="#services">Services</a>
+      </nav>
+      <div class="nav__right">
+        <span class="nav__status"><i></i>Disponible</span>
+        <a class="nav__cv" href="CV-Abdelbadi-Lababidi.pdf" target="_blank" rel="noopener">CV</a>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero" id="top">
+        <h1 class="hero__title" id="heroTitle">
+          <span class="hero__line" data-text="EXPLOREZ MON">EXPLOREZ MON</span>
+          <span class="hero__line hero__line--fade" data-text="PORTFOLIO">PORTFOLIO</span>
+        </h1>
+        <div class="hero__portrait" id="portrait">
+          <img src="img/portrait.jpg" alt="Portrait en contre-jour d'Abdelbadi Lababidi" />
+          <div class="hero__bubble" id="portraitBubble">Oui, c'est un contre-jour.<br />Le visage est réservé à l'entretien.</div>
+        </div>
+        <div class="hero__left mono">
+          Ingénieur industriel · info<br />Bruxelles · est. 2026
+          <div class="hero__scroll"><span></span>Scroll</div>
+        </div>
+        <div class="hero__right">
+          <p class="mono">Je fais le pont entre le métier et la technique — du besoin flou au livrable qui tourne.</p>
+          <ul class="mono">
+            <li>Chef de projet</li>
+            <li>Consultant</li>
+            <li>Analyste</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- ABOUT -->
+      <section class="about" id="about">
+        <div class="about__pin">
+          <div class="about__bg"><img src="img/starry-brussels.jpg" alt="" /></div>
+          <div class="about__card" id="aboutCard">
+            <img class="about__spot" src="img/spotlight.jpg" alt="" />
+            <div class="about__content">
+              <div class="about__top">
+                <h2 class="about__headline">Transformer un besoin flou<br />en livrable clair.</h2>
+                <div class="mono about__meta">BXL · 2026 · <span class="nl" data-tip="Ik leer nog. Dank u voor uw geduld.">FR / EN / AR / NL*</span></div>
+              </div>
+              <div class="about__bottom">
+                <div class="about__text">
+                  <div class="mono about__label">Ingénieur & coordination <span>— ECAM · Master · distinction</span></div>
+                  <p class="scramble">Ingénieur industriel en informatique, diplômé avec distinction. J'ai porté un produit seul du besoin client jusqu'à la vente, supervisé des équipes projet et mesuré des preuves de concept au lieu de les supposer. Ce qui m'intéresse : comprendre le métier, cadrer, coordonner — et écrire ce qu'il faut pour que d'autres puissent reprendre.</p>
+                </div>
+                <div class="about__actions">
+                  <a class="btn btn--light" href="CV-Abdelbadi-Lababidi.pdf" target="_blank" rel="noopener">Télécharger le CV</a>
+                  <a class="btn btn--ghost" href="#services">Services</a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="about__word about__word--l">À</div>
+          <div class="about__word about__word--r">PROPOS</div>
+        </div>
+      </section>
+
+      <!-- EXPERIENCE -->
+      <section class="exp" id="experience">
+        <div class="exp__pin">
+          <div class="exp__head">
+            <span class="mono" id="expLabel">Origines & parcours</span>
+            <div class="exp__progress"><i id="expProgress"></i></div>
+          </div>
+          <div class="exp__track" id="expTrack">
+            <div class="exp__panel exp__panel--intro">
+              <span class="pill mono">Parcours & terrain</span>
+              <h2 class="exp__intro">LÀ OÙ<br />J'AI ÉTÉ</h2>
+              <p>Du terrain à la coordination : chaque étape m'a appris à parler à quelqu'un de différent.</p>
+            </div>
+          </div>
+          <div class="exp__tabs" id="expTabs"></div>
+        </div>
+      </section>
+
+      <!-- PROJECTS (three.js curved carousel) -->
+      <section class="projects" id="projects">
+        <div class="projects__sheet">
+          <div class="projects__pin">
+            <div class="projects__kicker mono">Projets phares — glissez ou scrollez</div>
+            <canvas class="projects__canvas" id="carouselCanvas"></canvas>
+            <div class="projects__caption">
+              <div class="projects__name" id="projName">ORIGO</div>
+              <div class="projects__sub" id="projSub"></div>
+              <div class="projects__idx mono" id="projIdx">01 / 06</div>
+            </div>
+            <h2 class="projects__title">PROJETS PHARES</h2>
+          </div>
+        </div>
+      </section>
+
+      <!-- DOSSIERS (three.js hex ring → stack) -->
+      <section class="dossiers" id="dossiers">
+        <div class="dossiers__pin">
+          <canvas class="dossiers__canvas" id="ringCanvas"></canvas>
+          <div class="dossiers__center" id="ringCenter">DOSSIERS '26</div>
+          <div class="dossiers__name" id="dossName"></div>
+          <div class="dossiers__meta mono" id="dossMeta"></div>
+          <div class="dossiers__detail" id="dossDetail"></div>
+          <div class="dossiers__hint mono" id="dossHint">↓ scroll — six problèmes, six façons de les traiter</div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="services" id="services">
+        <h2 class="services__title">CE QUE J'APPORTE</h2>
+        <p class="services__intro">Pas un développeur à plein temps, pas un « expert IA » : quelqu'un qui comprend les deux mondes et les fait avancer ensemble.</p>
+        <div class="services__list" id="servicesList"></div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="contact" id="contact">
+        <h2 class="contact__title" data-text="PARLONS-EN">PARLONS-EN</h2>
+        <p class="contact__sub mono">Ouvert aux postes de chef de projet, consultant et analyste · Bruxelles & alentours</p>
+        <div class="contact__links">
+          <a class="pill" href="https://www.linkedin.com/in/abdelbadi-lababidi-929537397/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="pill" href="https://github.com/Prota0202" target="_blank" rel="noopener">GitHub</a>
+          <a class="pill" href="mailto:Abdelbadi1@protonmail.com">E-mail</a>
+          <a class="pill" href="tel:+32485466702">Téléphone</a>
+          <a class="pill pill--solid" href="CV-Abdelbadi-Lababidi.pdf" target="_blank" rel="noopener">Télécharger le CV</a>
+        </div>
+        <footer class="contact__foot mono">
+          <span>© 2026 Abdelbadi Lababidi — Bruxelles</span>
+          <span class="contact__egg" title="↑ ↑ ↓ ↓ ← → ← → B A">Aucun stakeholder n'a été malmené pendant ce projet.</span>
+        </footer>
+      </section>
+    </main>
+
+    <!-- EASTER EGG: meeting bingo -->
+    <div class="bingo" id="bingo" hidden>
+      <div class="bingo__card">
+        <div class="mono bingo__kicker">Mode réunion activé</div>
+        <h3>Bingo du comité de pilotage</h3>
+        <div class="bingo__grid" id="bingoGrid"></div>
+        <p class="mono bingo__foot">Je connais le jargon. Je préfère les comptes rendus avec des actions dedans. <button id="bingoClose">Fermer [Esc]</button></p>
+      </div>
+    </div>
+    <div class="toast mono" id="toast"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
