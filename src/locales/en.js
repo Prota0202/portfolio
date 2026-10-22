@@ -36,8 +36,8 @@ export default {
         'Industrial engineer in computer science, graduated with distinction. I took one product solo from client need to sale, supervised student project teams, and measured proof-of-concept work instead of assuming it works. What I care about: understanding the business, scoping, coordinating — and writing enough so others can take over.',
       downloadCv: 'Download CV',
       services: 'Services',
-      wordL: 'A',
-      wordR: 'BOUT',
+      wordL: 'ABOUT',
+      wordR: 'ME',
     },
     exp: {
       defaultLabel: 'Origins & path',
