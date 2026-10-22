@@ -70,7 +70,7 @@ export default {
       phone: 'Phone',
       downloadCv: 'Download CV',
       foot: '© 2026 Abdelbadi Lababidi — Brussels',
-      egg: 'No stakeholder was harmed during this project.',
+      egg: 'No stakeholder was harmed during this project — except me, the only one on the list.',
     },
     bingo: {
       kicker: 'Meeting mode enabled',

@@ -73,7 +73,7 @@ export default {
       phone: 'Téléphone',
       downloadCv: 'Télécharger le CV',
       foot: '© 2026 Abdelbadi Lababidi — Bruxelles',
-      egg: "Aucun stakeholder n'a été malmené pendant ce projet.",
+      egg: "Aucun stakeholder n'a été malmené — sauf moi, seul sur la liste.",
     },
     bingo: {
       kicker: 'Mode réunion activé',
