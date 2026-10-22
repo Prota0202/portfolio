@@ -333,13 +333,24 @@ html[lang="en"] .about__text p { text-transform: none; font-weight: 500; letter-
   -webkit-background-clip: text; background-clip: text; color: transparent;
   filter: drop-shadow(0 0 30px rgba(255,255,255,.18));
 }
-.contact__sub { color: #888; margin: 20px 0 30px; text-align: center; }
+.contact__sub { color: #888; margin: 20px 0 14px; text-align: center; max-width: min(640px, 92vw); }
+.contact__egg {
+  margin: 0 auto 28px;
+  padding: 0 12px;
+  max-width: min(560px, 92vw);
+  text-align: center;
+  color: #b8b8b8;
+  font-size: clamp(10px, 1.05vw, 12px);
+  line-height: 1.55;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: help;
+}
 .contact__links { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 .contact__links .pill { margin: 0; height: 32px; padding: 0 16px; }
 .contact__links .pill:hover { background: #fff; color: #000; }
 .pill--solid { background: #fff; color: #000; box-shadow: 0 0 26px rgba(255,255,255,.4); }
-.contact__foot { position: absolute; bottom: 26px; left: 32px; right: 32px; display: flex; justify-content: space-between; gap: 20px; color: #666; }
-.contact__egg { cursor: help; }
+.contact__foot { position: absolute; bottom: 26px; left: 32px; right: 32px; display: flex; justify-content: center; gap: 20px; color: #666; text-align: center; }
 
 /* ---------- EASTER EGGS ---------- */
 .bingo { position: fixed; inset: 0; z-index: 200; background: rgba(5,5,5,.75); backdrop-filter: blur(10px); display: grid; place-items: center; padding: 20px; }
