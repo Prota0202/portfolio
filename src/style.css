@@ -159,15 +159,12 @@ img { display: block; max-width: 100%; }
 .about__stage {
   position: relative;
   z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(14px, 2.2vw, 32px);
+  width: fit-content;
   max-width: 100%;
+  margin: 0 auto;
 }
 .about__card {
   position: relative;
-  flex-shrink: 0;
   width: 220px;
   height: 260px;
   border-radius: 14px;
@@ -196,7 +193,8 @@ img { display: block; max-width: 100%; }
 .about__text p { font-size: clamp(13px, 1.05vw, 16px); line-height: 1.6; color: #d8d8d8; text-transform: uppercase; font-weight: 600; letter-spacing: .01em; }
 .about__actions { display: flex; gap: 10px; flex-shrink: 0; }
 .about__word {
-  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
   font-weight: 800;
   color: #fff;
   pointer-events: none;
@@ -207,10 +205,21 @@ img { display: block; max-width: 100%; }
   text-shadow: 0 0 30px rgba(255, 255, 255, 0.35);
   will-change: transform;
 }
-html[lang="fr"] .about__stage { align-items: baseline; gap: clamp(8px, 1.4vw, 22px); }
-html[lang="fr"] .about__word--l { align-self: flex-start; transform: translateY(-0.42em); }
-html[lang="fr"] .about__word--r { align-self: flex-end; transform: translateY(0.38em); }
-html[lang="en"] .about__word { font-size: clamp(36px, 5vw, 80px); }
+.about__word--l {
+  right: 100%;
+  margin-right: clamp(12px, 2vw, 28px);
+  transform: translateY(-50%);
+}
+.about__word--r {
+  left: 100%;
+  margin-left: clamp(12px, 2vw, 28px);
+  transform: translateY(-50%);
+}
+html[lang="fr"] .about__word--l { transform: translateY(calc(-50% - 0.42em)); }
+html[lang="fr"] .about__word--r { transform: translateY(calc(-50% + 0.38em)); }
+html[lang="en"] .about__word { font-size: clamp(34px, 4.6vw, 76px); }
+html[lang="en"] .about__headline { max-width: 22em; }
+html[lang="en"] .about__text p { text-transform: none; font-weight: 500; letter-spacing: 0; }
 
 .btn {
   display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 22px; border-radius: 99px;
@@ -367,10 +376,11 @@ html[lang="en"] .about__word { font-size: clamp(36px, 5vw, 80px); }
   .hero__right { display: none; }
   .about__bottom, .about__top { flex-direction: column; align-items: flex-start; }
   .about__text p { font-size: 12px; }
-  .about__stage { gap: 10px; max-width: 96vw; }
-  .about__word { font-size: clamp(28px, 8vw, 44px); }
-  html[lang="fr"] .about__word--l { transform: translateY(-0.28em); }
-  html[lang="fr"] .about__word--r { transform: translateY(0.22em); }
+  .about__word { font-size: clamp(26px, 7.5vw, 40px); }
+  .about__word--l { margin-right: 10px; }
+  .about__word--r { margin-left: 10px; }
+  html[lang="fr"] .about__word--l { transform: translateY(calc(-50% - 0.28em)); }
+  html[lang="fr"] .about__word--r { transform: translateY(calc(-50% + 0.22em)); }
   .exp__panel { padding: 0 24px; }
   .exp__panel--intro { width: 100vw; }
   .exp__miles { grid-template-columns: 1fr; gap: 12px; }

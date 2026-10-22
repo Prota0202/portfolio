@@ -29,7 +29,7 @@ export default {
       portraitBubble: 'Yes, it’s backlit.<br />The face is reserved for the interview.',
     },
     about: {
-      headline: 'Turn a fuzzy brief<br />into a clear deliverable.',
+      headline: 'Turn a fuzzy brief<br />into a clear<br />deliverable.',
       meta: 'BXL · 2026 · <span class="nl" data-tip="Ik leer nog. Dank u voor uw geduld.">AR · NL*</span>',
       label: 'Engineering & coordination <span>— ECAM · MSc · distinction</span>',
       body:
