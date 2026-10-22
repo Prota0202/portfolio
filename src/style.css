@@ -66,12 +66,37 @@ img { display: block; max-width: 100%; }
 .nav__status { display: flex; align-items: center; gap: 6px; opacity: .8; }
 .nav__status i { width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: blink 1.6s infinite; }
 .nav__cv { padding: 6px 14px; border: 1px solid currentColor; border-radius: 99px; }
-.lang { display: flex; gap: 2px; padding: 2px; border: 1px solid currentColor; border-radius: 99px; opacity: .85; }
-.lang__btn {
-  font-family: var(--mono); font-size: 9px; letter-spacing: .08em; text-transform: uppercase;
-  background: transparent; border: 0; color: inherit; padding: 4px 8px; border-radius: 99px; cursor: pointer; transition: .25s;
+.lang {
+  position: fixed;
+  top: 16px;
+  right: 200px;
+  z-index: 60;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: #0c0c0c;
+  color: #fff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.14), 0 8px 28px rgba(0, 0, 0, 0.22);
+  mix-blend-mode: normal;
 }
-.lang__btn.is-active { background: currentColor; color: #000; mix-blend-mode: difference; }
+.lang__btn {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 0;
+  color: rgba(255, 255, 255, 0.45);
+  padding: 7px 12px;
+  min-width: 40px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.lang__btn:hover { color: #fff; }
+.lang__btn.is-active { background: #fff; color: #111; }
 @keyframes blink { 50% { opacity: .2; } }
 
 /* ---------- HERO ---------- */
@@ -307,7 +332,8 @@ img { display: block; max-width: 100%; }
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 900px) {
   .nav__links, .nav__status { display: none; }
-  .lang { margin-right: 4px; }
+  .lang { top: 14px; right: 76px; padding: 3px; gap: 2px; }
+  .lang__btn { font-size: 10px; padding: 6px 10px; min-width: 36px; }
   .nav { padding: 16px 20px; }
   .hero__title { top: 16vh; font-size: 12.4vw; }
   .about__content { padding-top: 76px; }
