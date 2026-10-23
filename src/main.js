@@ -106,8 +106,6 @@ function rebuildExperience() {
   const { experiences, ui } = getData();
   const track = $('#expTrack');
   const tabs = $('#expTabs');
-  track.querySelectorAll('.exp__panel:not(.exp__panel--intro)').forEach((p) => p.remove());
-  tabs.innerHTML = '';
 
   const intro = track.querySelector('.exp__panel--intro');
   intro.querySelector('.pill').textContent = ui.exp.introPill;
@@ -136,6 +134,8 @@ function rebuildExperience() {
     return;
   }
 
+  existing.forEach((p) => p.remove());
+  tabs.innerHTML = '';
   experiences.forEach((x, i) => {
     const panel = document.createElement('article');
     panel.className = 'exp__panel';
@@ -301,10 +301,13 @@ function scrambleAbout() {
 
 function experienceScroll() {
   const track = $('#expTrack');
-  const panels = track.querySelectorAll('.exp__panel');
-  const tabs = [...document.querySelectorAll('#expTabs button')];
-  const last = panels[panels.length - 1];
-  const distance = () => last.offsetLeft + last.offsetWidth - window.innerWidth;
+  const getPanels = () => track.querySelectorAll('.exp__panel');
+  const getTabs = () => [...document.querySelectorAll('#expTabs button')];
+  const distance = () => {
+    const panels = getPanels();
+    const last = panels[panels.length - 1];
+    return Math.max(0, last.offsetLeft + last.offsetWidth - window.innerWidth);
+  };
   let current = -1;
 
   const st = ScrollTrigger.create({
@@ -318,7 +321,8 @@ function experienceScroll() {
     onUpdate: (self) => {
       $('#expProgress').style.width = self.progress * 100 + '%';
       const x = -distance() * self.progress;
-      panels.forEach((p, i) => {
+      const tabs = getTabs();
+      getPanels().forEach((p, i) => {
         const center = p.offsetLeft + x + p.offsetWidth / 2;
         const off = (center - window.innerWidth / 2) / window.innerWidth;
         const ghost = p.querySelector('.exp__ghost');
@@ -335,18 +339,21 @@ function experienceScroll() {
       });
       if (self.progress < 0.05 && current !== 0) {
         current = 0;
-        tabs.forEach((t) => t.classList.remove('is-active'));
+        getTabs().forEach((t) => t.classList.remove('is-active'));
         $('#expLabel').textContent = getData().ui.exp.defaultLabel;
       }
     },
+    onRefresh: () => (current = -1),
   });
 
-  tabs.forEach((t, k) => {
-    t.addEventListener('click', () => {
-      const panel = panels[k + 1];
-      const p = (panel.offsetLeft - (window.innerWidth - panel.offsetWidth) / 2) / distance();
-      lenis.scrollTo(st.start + clamp(p) * (st.end - st.start), { duration: 1.4 });
-    });
+  $('#expTabs').addEventListener('click', (e) => {
+    const t = e.target.closest('button');
+    if (!t) return;
+    const panel = getPanels()[Number(t.dataset.i) + 1];
+    const d = distance();
+    if (!panel || !d) return;
+    const p = (panel.offsetLeft - (window.innerWidth - panel.offsetWidth) / 2) / d;
+    lenis.scrollTo(st.start + clamp(p) * (st.end - st.start), { duration: 1.4 });
   });
 }
 
@@ -501,6 +508,9 @@ async function boot() {
   document.body.classList.remove('is-loading');
   lenis.start();
   ScrollTrigger.refresh();
+  if (document.readyState !== 'complete') {
+    window.addEventListener('load', () => ScrollTrigger.refresh(), { once: true });
+  }
 }
 
 boot();
