@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Site statique — pas de téléchargement de fichiers exécutables.
+# CV : profil LinkedIn uniquement (voir le site).
