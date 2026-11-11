@@ -37,7 +37,7 @@ export default {
       label: 'Ingénieur & coordination <span>— ECAM · Master · distinction</span>',
       body:
         "Ingénieur industriel en informatique, diplômé avec distinction. J'ai porté un produit seul du besoin client jusqu'à la vente, supervisé des équipes projet et mesuré des preuves de concept au lieu de les supposer. Ce qui m'intéresse : comprendre le métier, cadrer, coordonner — et écrire ce qu'il faut pour que d'autres puissent reprendre.",
-      downloadCv: 'Télécharger le CV',
+      downloadCv: 'CV sur LinkedIn',
       services: 'Services',
       wordL: 'À',
       wordR: 'PROPOS',
@@ -71,7 +71,7 @@ export default {
       sub: 'Ouvert aux postes de chef de projet, consultant et analyste · Bruxelles & alentours',
       email: 'E-mail',
       phone: 'Téléphone',
-      downloadCv: 'Télécharger le CV',
+      downloadCv: 'CV sur LinkedIn',
       foot: '© 2026 Abdelbadi Lababidi — Bruxelles',
       egg: "Aucun stakeholder n'a été malmené — sauf moi, seul sur la liste.",
     },

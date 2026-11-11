@@ -2,9 +2,11 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Lenis from 'lenis';
 import { getData, getLang, setLang, onLangChange, initLang } from './i18n.js';
+import { links } from './locales/shared.js';
 import { createCarousel } from './three/carousel.js';
 import { createRing } from './three/ring.js';
 import { initEasterEggs } from './eggs.js';
+import { applyFilmBrandUI, filmReplace } from './filmBrand.js';
 
 gsap.registerPlugin(ScrollTrigger);
 document.body.classList.add('is-loading');
@@ -42,7 +44,7 @@ document.querySelectorAll('a[href^="#"]').forEach((a) => {
 function applyStaticUI() {
   const { meta, ui } = getData();
   document.documentElement.lang = getData().htmlLang;
-  document.title = meta.title;
+  document.title = filmReplace(meta.title);
   $('meta[name="description"]').setAttribute('content', meta.description);
   $('#loaderSuffix').textContent = ui.loaderSuffix;
   document.querySelectorAll('.nav__links a').forEach((a, i) => {
@@ -50,6 +52,10 @@ function applyStaticUI() {
   });
   $('#navStatus').textContent = ui.status;
   $('#navCv').textContent = ui.cv;
+  $('#navCv').href = links.linkedin;
+  const aboutCv = $('#aboutCv');
+  aboutCv.textContent = ui.about.downloadCv;
+  aboutCv.href = links.linkedin;
 
   const h = ui.hero;
   const l1 = $('.hero__line:nth-child(1)');
@@ -61,7 +67,7 @@ function applyStaticUI() {
   $('.hero__left').innerHTML = `${h.left}<div class="hero__scroll"><span></span>${h.scroll}</div>`;
   $('.hero__right p').textContent = h.pitch;
   $('.hero__right ul').innerHTML = h.roles.map((r) => `<li>${r}</li>`).join('');
-  $('.hero__portrait img').alt = h.portraitAlt;
+  $('.hero__portrait img').alt = filmReplace(h.portraitAlt);
   $('#portraitBubble').innerHTML = h.portraitBubble;
 
   const ab = ui.about;
@@ -69,7 +75,6 @@ function applyStaticUI() {
   $('.about__meta').innerHTML = ab.meta;
   $('.about__label').innerHTML = ab.label;
   document.querySelector('.scramble').textContent = ab.body;
-  $('.about__actions .btn--light').textContent = ab.downloadCv;
   $('.about__actions .btn--ghost').textContent = ab.services;
   $('.about__word--l').textContent = ab.wordL;
   $('.about__word--r').textContent = ab.wordR;
@@ -86,8 +91,7 @@ function applyStaticUI() {
   $('.contact__sub').textContent = ui.contact.sub;
   $('.contact__links a:nth-child(3)').textContent = ui.contact.email;
   $('.contact__links a:nth-child(4)').textContent = ui.contact.phone;
-  $('.contact__links a:nth-child(5)').textContent = ui.contact.downloadCv;
-  $('.contact__foot span:first-child').textContent = ui.contact.foot;
+  $('.contact__foot span:first-child').textContent = filmReplace(ui.contact.foot);
   $('.contact__egg').textContent = ui.contact.egg;
 
   const bg = ui.bingo;
@@ -100,6 +104,7 @@ function applyStaticUI() {
   document.querySelectorAll('.lang__btn').forEach((b) => {
     b.classList.toggle('is-active', b.dataset.lang === getLang());
   });
+  applyFilmBrandUI();
 }
 
 function rebuildExperience() {

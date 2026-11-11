@@ -34,7 +34,7 @@ export default {
       label: 'Engineering & coordination <span>— ECAM · MSc · distinction</span>',
       body:
         'Industrial engineer in computer science, graduated with distinction. I took one product solo from client need to sale, supervised student project teams, and measured proof-of-concept work instead of assuming it works. What I care about: understanding the business, scoping, coordinating — and writing enough so others can take over.',
-      downloadCv: 'Download CV',
+      downloadCv: 'CV on LinkedIn',
       services: 'Services',
       wordL: 'ABOUT',
       wordR: 'ME',
@@ -68,7 +68,7 @@ export default {
       sub: 'Open to project manager, consultant, and analyst roles · Brussels & area',
       email: 'Email',
       phone: 'Phone',
-      downloadCv: 'Download CV',
+      downloadCv: 'CV on LinkedIn',
       foot: '© 2026 Abdelbadi Lababidi — Brussels',
       egg: 'No stakeholder was harmed during this project — except me, the only one on the list.',
     },

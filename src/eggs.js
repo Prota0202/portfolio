@@ -1,4 +1,5 @@
 import { getData, onLangChange } from './i18n.js';
+import { filmConsoleLabel, filmReplace } from './filmBrand.js';
 
 const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
 
@@ -12,11 +13,11 @@ export function initEasterEggs(lenis) {
     toastTimer = setTimeout(() => toastEl.classList.remove('is-on'), 3200);
   };
 
-  let baseTitle = getData().meta.title;
+  let baseTitle = filmReplace(getData().meta.title);
 
   const logConsole = () => {
     console.log(
-      `%cABDELBADI•%c\n${getData().ui.eggs.console}`,
+      `%c${filmConsoleLabel()}%c\n${getData().ui.eggs.console}`,
       'font: 800 28px "Plus Jakarta Sans", sans-serif; color:#111; background:#e9e9e9; padding:6px 10px; border-radius:6px',
       'font: 12px "Space Mono", monospace; color:#666',
     );
@@ -24,14 +25,14 @@ export function initEasterEggs(lenis) {
   logConsole();
 
   onLangChange(() => {
-    baseTitle = getData().meta.title;
+    baseTitle = filmReplace(getData().meta.title);
     if (!document.hidden) document.title = baseTitle;
     document.getElementById('bingoClose').textContent = getData().ui.bingo.close;
     document.querySelector('.bingo__foot').firstChild.textContent = `${getData().ui.bingo.foot} `;
   });
 
   document.addEventListener('visibilitychange', () => {
-    document.title = document.hidden ? getData().meta.hiddenTitle : baseTitle;
+    document.title = document.hidden ? filmReplace(getData().meta.hiddenTitle) : baseTitle;
   });
 
   let clicks = 0;
